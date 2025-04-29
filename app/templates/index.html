@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Tracker</title>
+</head>
+<body>
+    <h1>Submit Job Application</h1>
+    <form action="/apply" method="post">
+        <input type="text" name="company" placeholder="Company"><br>
+        <input type="text" name="position" placeholder="Position"><br>
+        <input type="date" name="date_applied"><br>
+        <input type="text" name="status" placeholder="Status"><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Applications</h2>
+    <ul>
+        {% for app in applications %}
+            <li>{{ app.company }} - {{ app.position }} ({{ app.status }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
