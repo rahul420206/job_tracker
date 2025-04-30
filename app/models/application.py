@@ -1,4 +1,4 @@
-from app.db.database import get_db
+from app.database import get_db
 
 def create_application(job_id, username):
     db = get_db()

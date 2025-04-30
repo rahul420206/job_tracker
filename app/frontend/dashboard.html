@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Dashboard</h2>
+    <p id="welcome-msg"></p>
+
+    <div id="job-list"></div>
+
+    <div id="post-job-form" class="form" style="display: none;">
+      <h3>Post a Job</h3>
+      <input type="text" id="job-title" placeholder="Job Title">
+      <input type="text" id="job-company" placeholder="Company">
+      <input type="text" id="job-location" placeholder="Location">
+      <textarea id="job-desc" placeholder="Description"></textarea>
+      <button onclick="postJob()">Post Job</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

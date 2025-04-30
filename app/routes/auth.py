@@ -21,11 +21,27 @@ def register_user(user: UserCreate):
         raise HTTPException(status_code=500, detail="Could not create user")
     return {"message": "User registered successfully"}
 
-@router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = user_model.get_user_by_username(form_data.username)
-    if not user or not security.verify_password(form_data.password, user['password']):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+# app/routes/auth.py
 
-    token = security.create_access_token({"sub": user['username'], "role": user['role']})
-    return {"access_token": token, "token_type": "bearer"}
+from fastapi import APIRouter, HTTPException, Depends, Form
+from app.core.security import verify_password, create_access_token
+from app.database import get_db
+from datetime import timedelta
+
+router = APIRouter()
+
+@router.post("/login")
+def login(username: str = Form(...), password: str = Form(...)):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+    user = cursor.fetchone()
+
+    if not user or not verify_password(password, user["hashed_password"]):
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+
+    access_token = create_access_token(
+        data={"sub": user["username"], "role": user.get("role", "user")},
+        expires_delta=timedelta(minutes=30)
+    )
+    return {"access_token": access_token, "token_type": "bearer"}

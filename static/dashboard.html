@@ -1,0 +1,45 @@
+<!-- frontend/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Job Tracker</h2>
+    <p id="user-info">Loading user info...</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      window.location.href = "index.html";
+    }
+
+    async function getUser() {
+      const res = await fetch("http://127.0.0.1:8000/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById("user-info").innerText = `Hello, ${data.username} (${data.role})`;
+      } else {
+        localStorage.removeItem("access_token");
+        window.location.href = "index.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("access_token");
+      window.location.href = "index.html";
+    }
+
+    getUser();
+  </script>
+</body>
+</html>
